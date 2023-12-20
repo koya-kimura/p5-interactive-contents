@@ -2,8 +2,18 @@ let theShader;
 let captureTexture;
 let capture;
 
+let img;
+
+var panel;
+
+var mirrorNum = 2;
+var mosaicNum = 10;
+var isRipple = false;
+
 function preload(){
-  theShader = loadShader("main.vert", "main.frag");}
+  theShader = loadShader("main.vert", "main.frag");
+  img = loadImage("../../assets/image/bandana-woman.jpg");
+}
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
@@ -11,6 +21,16 @@ function setup() {
 
   capture = createCapture(VIDEO);
   capture.hide();
+
+  panel = createGui('parameter');
+
+  sliderRange(1, 10, 1);
+  panel.addGlobals('mirrorNum');
+
+  sliderRange(1, 100, 10);
+  panel.addGlobals('mosaicNum');
+
+  panel.addGlobals('isRipple');
 }
 
 function draw() {
@@ -21,7 +41,12 @@ function draw() {
   shader(theShader);
 
   theShader.setUniform("u_time", frameCount / 100);
-  theShader.setUniform("u_captureTex", captureTexture);
+  theShader.setUniform("u_captureTex", img);
+
+  theShader.setUniform("u_captureTex", img);
+  theShader.setUniform("u_mirrorNum", mirrorNum);
+  theShader.setUniform("u_mosaicNum", mosaicNum);
+  theShader.setUniform("u_isRipple", isRipple);
 
   rect(0, 0, width, height);
 }

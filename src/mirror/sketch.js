@@ -2,8 +2,11 @@ let theShader;
 let captureTexture;
 let capture;
 
+let img;
+
 function preload(){
   theShader = loadShader("main.vert", "main.frag");
+  img = loadImage("../../assets/image/bandana-woman.jpg");
 }
 
 function setup() {
@@ -22,7 +25,7 @@ function draw() {
   shader(theShader);
 
   theShader.setUniform("u_time", frameCount / 100);
-  theShader.setUniform("u_captureTex", captureTexture);
+  theShader.setUniform("u_captureTex", img);
 
   rect(0, 0, width, height);
 }

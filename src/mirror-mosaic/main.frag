@@ -4,7 +4,6 @@ varying vec2 vTexCoord;
 
 uniform float u_time;
 uniform sampler2D u_captureTex;
-uniform float u_mirrorNum;
 uniform float u_mosaicNum;
 uniform bool u_isRipple;
 
@@ -12,7 +11,7 @@ uniform bool u_isRipple;
 float pi = 3.14159265358979;
 
 vec2 mosaic(vec2 inputTexCoord){
-    vec2 outputTexCoord;
+    vec2 outputTexCoord = inputTexCoord;
 
     outputTexCoord.x=floor(inputTexCoord.x*u_mosaicNum)/u_mosaicNum;
     outputTexCoord.y=floor(inputTexCoord.y*u_mosaicNum)/u_mosaicNum;
@@ -21,8 +20,8 @@ vec2 mosaic(vec2 inputTexCoord){
 }
 
 vec2 mirror(vec2 inputTexCoord){
-    vec2 outputTexCoord;
-    
+    vec2 outputTexCoord = inputTexCoord;
+
     outputTexCoord.x=abs(inputTexCoord.x*2.-1.);
     outputTexCoord.y=abs(inputTexCoord.y*2.-1.);
     
@@ -30,7 +29,7 @@ vec2 mirror(vec2 inputTexCoord){
 }
 
 vec2 ripple(vec2 inputTexCoord){
-    vec2 outputTexCoord;
+    vec2 outputTexCoord = inputTexCoord;
     
     vec2 center=vec2(.5,.5);
     
@@ -56,7 +55,11 @@ vec2 ripple(vec2 inputTexCoord){
 void main(void) {
     vec2 uv = vTexCoord;
 
-    vec2 newUv = ripple(mosaic(mirror(uv)));
+    vec2 newUv = mosaic(uv);
+
+    if(u_isRipple){
+        newUv = ripple(newUv);
+    }
 
     gl_FragColor = texture2D(u_captureTex, newUv);
 }
